@@ -78,6 +78,7 @@ export const useChangeStatusBox = () => {
 };
 
 export const useGetStatusBox = (boxNumber?: number, reportId?: string) => {
+  console.log(boxNumber);
   const query = useQuery({
     queryKey: ['box', boxNumber, reportId],
     queryFn: async () => {
