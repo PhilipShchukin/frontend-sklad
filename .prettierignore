@@ -1,0 +1,12 @@
+node_modules
+build
+dist
+coverage
+.next
+.out
+.vscode
+**/*.min.*
+**/*.lock
+**/generated/**
+
+src-tauri
