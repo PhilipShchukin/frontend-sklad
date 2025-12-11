@@ -2,7 +2,10 @@ import { Api } from '@/services/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
   AllPalletsForBox,
+  ChangePalletStatus,
   ChangeStatus,
+  DeleteBox,
+  DeletePallet,
   MoveBoxPayload,
   Report,
 } from '@/types/pages-types/report-types';
@@ -13,7 +16,7 @@ export function useGetReport() {
     queryKey: ['report'],
     queryFn: () => Api.report.getAllReport(),
   });
-
+  console.log('useGetReport', data);
   return { data, isLoading, isSuccess };
 }
 
@@ -27,8 +30,9 @@ export const usePushReportDB = () => {
       toast.success('Отчет добавлен в базу');
     },
     onError: (error: Error) => {
+      toast.error(error.message);
       // toast.error(error.message);
-      toast.error('Отчет не добавлен в базу');
+      // toast.error('Отчет не добавлен в базу');
     },
   });
 };
@@ -84,6 +88,7 @@ export const useGetStatusBox = (boxNumber?: number, reportId?: string) => {
     queryFn: async () => {
       if (!boxNumber || !reportId) return [];
       const { data } = await Api.report.getBoxStatus({ boxNumber, reportId });
+      console.log('useGetStatusBox', data);
       return data;
     },
     enabled: false, // не выполнять автоматически
@@ -99,6 +104,76 @@ export const useDeletePalleteForBox = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['box'] });
       toast.success('Коробка без паллеты');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+};
+
+export const useChangeStatusPallet = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: ChangePalletStatus) => Api.report.changePalletStatus(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pallet'] });
+      toast.success('Статус коробки изменен');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+};
+
+export const useUnpackPallet = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: { palletNumber: number; reportId: string }) =>
+      Api.report.unpackPallet(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['report', 'pallet'] });
+      toast.success('Паллета расформирована');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+};
+
+export const useUnpackBox = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: { boxNumber: number; reportId: string }) => Api.report.unpackBox(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['report', 'box'] });
+      toast.success('Коробка расформирована');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+};
+
+export const useDeletePallet = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: DeletePallet) => Api.report.deletePallete(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['pallet'] });
+      toast.success('Паллета удалена');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+};
+export const useDeleteBox = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: DeleteBox) => Api.report.deleteBox(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['box'] });
+      toast.success('Коробка удалена');
     },
     onError: (error: Error) => {
       toast.error(error.message);

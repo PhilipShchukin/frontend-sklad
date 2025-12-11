@@ -1,45 +1,70 @@
 import { Api } from '@/services/api-client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type {
-  AllPalletsForBox,
-  ChangeStatus,
-  MoveBoxPayload,
-  Report,
-} from '@/types/pages-types/report-types';
-import { toast } from 'sonner';
-import type { AgentsResponse, ShipmentGet } from '@/services/shipment.service';
 
-export function useGetShipment() {
-  const { data, isLoading, isSuccess } = useQuery<ShipmentGet[]>({
-    queryKey: ['shipment'],
-    queryFn: () => Api.shipment.getProducts(),
+export function useGetAgents() {
+  const { data, isLoading } = useQuery({
+    queryKey: ['agents'],
+    queryFn: () => Api.shipment.getAgents(),
+  });
+
+  return { data, isLoading };
+}
+
+export function useGetReportsForAgent(agent: string) {
+  const { data, isLoading, isSuccess } = useQuery({
+    queryKey: ['agents', agent],
+    queryFn: () => Api.shipment.getReportsForAgent(agent),
+    enabled: !!agent,
   });
 
   return { data, isLoading, isSuccess };
 }
 
-export const useShipmentByGtin = () => {
-  const queryClient = useQueryClient();
+type CodeRow = {
+  code: string;
+  boxLabel?: string | null;
+  palletLabel?: string | null;
+};
+
+import { fetch } from '@tauri-apps/plugin-http';
+
+export const useGetReportCodes = () => {
   return useMutation({
-    mutationFn: (gtin: string) => Api.shipment.getStockByGtin(gtin),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['shipment'] });
-      toast.success('Коробка без паллеты');
-    },
-    onError: (error: Error) => {
-      toast.error(error.message);
+    mutationFn: async (reportId: string): Promise<CodeRow[]> => {
+      const res = await fetch(`http://localhost:4000/api/shipment/report-codes/${reportId}`);
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || 'Ошибка загрузки кодов');
+      }
+      const data = await res.json();
+      // ожидаем массив объектов { code, boxLabel, palletLabel }
+      return data as CodeRow[];
     },
   });
 };
 
-export function useGetAgents() {
-  const { data, isLoading, isSuccess } = useQuery<AgentsResponse>({
-    queryKey: ['agents'],
-    queryFn: () => Api.shipment.getAgentsList(),
-  });
+// export const useShipmentByGtin = () => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: (gtin: string) => Api.shipment.getStockByGtin(gtin),
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ['shipment'] });
+//       toast.success('Коробка без паллеты');
+//     },
+//     onError: (error: Error) => {
+//       toast.error(error.message);
+//     },
+//   });
+// };
 
-  return { data, isLoading, isSuccess };
-}
+// export function useGetAgents() {
+//   const { data, isLoading, isSuccess } = useQuery<AgentsResponse>({
+//     queryKey: ['agents'],
+//     queryFn: () => Api.shipment.getAgentsList(),
+//   });
+
+//   return { data, isLoading, isSuccess };
+// }
 
 // export const useCreateShipmentTask = () => {
 //   return useMutation({

@@ -75,3 +75,10 @@ export type ChangeStatus = AllPalletsForBox & {
 };
 
 export type Shipment = {};
+
+export type DeletePallet = Pick<Code, 'palletNumber' | 'reportId'>;
+export type DeleteBox = Pick<Code, 'boxNumber' | 'reportId'>;
+
+export type ChangePalletStatus = DeletePallet & {
+  status?: Status;
+};

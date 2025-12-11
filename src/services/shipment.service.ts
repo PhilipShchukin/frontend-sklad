@@ -1,56 +1,32 @@
-import { ApiRoutes } from './constants';
+import { ApiRoutesShipment } from './constants';
 import { axiosClassic } from '@/api/interceptors';
-export type ShipmentGet = {
+
+export interface GetReportsForAgent {
+  id: string;
+  startDate: string;
+  endDate: string;
   gtin: string;
+  agent: string;
+  manufactureDate: string;
+  bbd: string;
+  batch: string;
   name: string;
+  description: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  codesCount: number;
+}
+
+export const getAgents = async (): Promise<string[]> => {
+  return (await axiosClassic.get(ApiRoutesShipment.SHIPMENT_AGENT)).data;
 };
 
-// export type ShipmentStockByGtin = Omit<ShipmentGet, 'name'> & {
-//   count: string;
+export const getReportsForAgent = async (agent: string): Promise<GetReportsForAgent[]> => {
+  const response = await axiosClassic.post(ApiRoutesShipment.SHIPMENT_REPORT, { agent });
+  return response.data;
+};
+
+// export const createShipmentTask = async (): Promise<any> => {
+//   return (await axiosClassic.post(ApiRoutes.SHIPMENT_TASK)).data;
 // };
-export type Ship = {
-  gtin: string;
-  count: string;
-};
-
-export interface Country {
-  code: string;
-  name: string;
-  comment?: string | null;
-}
-
-export interface Status {
-  code: number;
-  message: string;
-}
-
-export interface Agent {
-  id: number;
-  name: string;
-  unp: string;
-  country: Country;
-  address?: string;
-  gln?: string;
-  status?: Status;
-  is_verified?: boolean;
-}
-
-export interface AgentsResponse {
-  agents_list: Agent[];
-}
-
-export const getProducts = async (): Promise<ShipmentGet[]> => {
-  return (await axiosClassic.get(ApiRoutes.SHIPMENT)).data;
-};
-
-export const getStockByGtin = async (gtin: string): Promise<Ship> => {
-  return (await axiosClassic.post(ApiRoutes.SHIPMENT_STOCK, { gtin })).data;
-};
-
-export const getAgentsList = async (): Promise<AgentsResponse> => {
-  return (await axiosClassic.post(ApiRoutes.DATA)).data;
-};
-
-export const createShipmentTask = async (): Promise<any> => {
-  return (await axiosClassic.post(ApiRoutes.SHIPMENT_TASK)).data;
-};

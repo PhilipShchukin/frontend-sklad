@@ -29,6 +29,7 @@ export function ActionDropDown({ boxNumber, reportId }: { boxNumber: number; rep
   const { mutate: changeStatus } = useChangeStatusBox();
   const { mutate: deletePallet } = useDeletePalleteForBox();
   const { data: pallets, isLoading, refetch } = usePalletsAll(boxNumber, reportId);
+  console.log('pallets444', pallets);
   const {
     data: getStatus,
     isLoading: isGetStatusLoading,

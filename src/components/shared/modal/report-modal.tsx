@@ -18,6 +18,7 @@ export function ReportModal({ isOpen, onClose, report }: ReportModalProps) {
   if (!report) return null;
 
   const uniquePallets = Array.from(new Map(report.codes.map((c) => [c.palletNumber, c])).values());
+  const uniqueBox = Array.from(new Map(report.codes.map((c) => [c.boxNumber, c])).values());
 
   // console.log('uniquePallets', uniquePallets.length);
   // console.log('codes', report.codes.length);
@@ -67,7 +68,7 @@ export function ReportModal({ isOpen, onClose, report }: ReportModalProps) {
                 <p className="flex gap-1">
                   <b>Количество коробок: </b>
                   <div className="flex gap-0.5">
-                    {report.codes.length}
+                    {uniqueBox.length}
                     <BoxDrawer codes={report.codes} />
                   </div>
                 </p>
@@ -75,7 +76,8 @@ export function ReportModal({ isOpen, onClose, report }: ReportModalProps) {
                   <b>Количество паллет: </b>
                   <div className="flex gap-0.5">
                     {uniquePallets.length}
-                    <PalletDrawer codes={report.codes} />
+                    {/* <PalletDrawer codes={report.codes} /> */}
+                    <PalletDrawer pallets={report.pallets} />
                   </div>
                 </p>
               </div>
