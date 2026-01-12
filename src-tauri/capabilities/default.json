@@ -9,9 +9,26 @@
       "identifier": "http:default",
       "allow": [
         { "url": "http://localhost:4000/*" },
-        { "url": "http://127.0.0.1:4000/*" }
+        { "url": "http://127.0.0.1:4000/*" },
+        { "url": "http://172.16.16.1:4000/*" },
+        { "url": "http://127.0.0.1:4545" },
+        { "url": "http://127.0.0.1:8765" }
       ],
+
+      
+      
       "deny": []
+    },
+    {
+      "identifier": "dialog:default",
+      "allow": ["save", "open"],
+      "deny": []
+    },
+
+    "fs:default",
+    {
+      "identifier": "fs:allow-document-write"
     }
   ]
+  
 }

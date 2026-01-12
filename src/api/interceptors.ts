@@ -1,12 +1,13 @@
 import axios, { type CreateAxiosDefaults } from 'axios';
 import { fetch } from '@tauri-apps/plugin-http';
-import axiosTauriApiAdapter from 'axios-tauri-api-adapter';
-const baseURL = 'http://localhost:4000/api';
+import axiosTauriApiAdapter from './axios-tauri-adapter';
+// import axiosTauriApiAdapter from 'axios-tauri-api-adapter';
+// const baseURL = 'http://localhost:4000/api';  `
 const options: CreateAxiosDefaults = {
   adapter: axiosTauriApiAdapter,
   // baseURL: 'http://localhost:4000/api',
-  baseURL: import.meta.env.VITE_API_URL,
-  // baseURL: 'http://172.16.16.1:4000/api',
+  // baseURL: import.meta.env.VITE_API_URL,
+  baseURL: 'http://localhost:4000/api',
   headers: {
     'Content-Type': 'application/json',
   },

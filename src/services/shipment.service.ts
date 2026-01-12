@@ -5,6 +5,8 @@ export interface GetReportsForAgent {
   id: string;
   startDate: string;
   endDate: string;
+  orderNumber: string;
+  contractorEgaisId: string;
   gtin: string;
   agent: string;
   manufactureDate: string;

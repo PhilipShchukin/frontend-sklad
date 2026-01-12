@@ -18,6 +18,9 @@ export type Units = {
 };
 
 export type Report = {
+  barCode: string;
+  egaisCode: string;
+  externalCode: string;
   filename: string;
   docId: string;
   StartDate: string;

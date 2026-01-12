@@ -230,7 +230,7 @@ const CounterpartiesForm: React.FC<CounterpartiesFormProps> = ({ mode, id, onCan
         <CardContent className="space-y-6">
           {/* Форма - точно такая же как у вас */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="code" className="flex items-center gap-2">
                 <HashIcon className="h-4 w-4" />
                 Код
@@ -242,7 +242,7 @@ const CounterpartiesForm: React.FC<CounterpartiesFormProps> = ({ mode, id, onCan
                 placeholder="Введите код"
                 className="w-full"
               />
-            </div>
+            </div> */}
 
             <div className="space-y-2">
               <Label htmlFor="name" className="flex items-center gap-2">
@@ -279,9 +279,20 @@ const CounterpartiesForm: React.FC<CounterpartiesFormProps> = ({ mode, id, onCan
                 </SelectContent>
               </Select>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="contractorEgaisId" className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                Ид. контрагента в ЕГАИС
+              </Label>
+              <Input
+                id="contractorEgaisId"
+                value={formData.contractorEgaisId}
+                onChange={handleChange}
+                placeholder="Введите ID контрагента в ЕГАИС"
+                className="w-full font-mono"
+              />
+            </div>
           </div>
-
-          {/* ... остальная форма точно такая же как у вас ... */}
 
           {/* Вторая строка: Тип штрихкода палеты, Тип формирования имени файла */}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -328,7 +339,7 @@ const CounterpartiesForm: React.FC<CounterpartiesFormProps> = ({ mode, id, onCan
               </Select>
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="displayName" className="flex items-center gap-2">
                 <FileText className="h-4 w-4" />
                 Название для отображения
@@ -340,148 +351,20 @@ const CounterpartiesForm: React.FC<CounterpartiesFormProps> = ({ mode, id, onCan
                 placeholder="Введите название для отображения"
                 className="w-full"
               />
+            </div> */}
+
+            <div className="space-y-2">
+              <Label htmlFor="lineNumber" className="flex items-center gap-2">
+                <HashIcon className="h-4 w-4" />№ линии
+              </Label>
+              <Input
+                id="lineNumber"
+                value={formData.lineNumber}
+                onChange={handleChange}
+                placeholder="Введите номер линии"
+                className="w-full"
+              />
             </div>
-          </div>
-
-          {/* Разделитель */}
-          <div className="border-t pt-6">
-            {/* Третья строка: № линии, Ид. контрагента в ЕГАИС */}
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="lineNumber" className="flex items-center gap-2">
-                  <HashIcon className="h-4 w-4" />№ линии
-                </Label>
-                <Input
-                  id="lineNumber"
-                  value={formData.lineNumber}
-                  onChange={handleChange}
-                  placeholder="Введите номер линии"
-                  className="w-full"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="contractorEgaisId" className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  Ид. контрагента в ЕГАИС
-                </Label>
-                <Input
-                  id="contractorEgaisId"
-                  value={formData.contractorEgaisId}
-                  onChange={handleChange}
-                  placeholder="Введите ID контрагента в ЕГАИС"
-                  className="w-full font-mono"
-                />
-              </div>
-            </div>
-
-            {/* Четвертая строка: Ид. грузоотправителя в ЕГАИС, Название грузоотправителя */}
-            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="shipperEgaisId" className="flex items-center gap-2">
-                  <Truck className="h-4 w-4" />
-                  Ид. грузоотправителя в ЕГАИС
-                </Label>
-                <Input
-                  id="shipperEgaisId"
-                  value={formData.shipperEgaisId}
-                  onChange={handleChange}
-                  placeholder="Введите ID грузоотправителя в ЕГАИС"
-                  className="w-full font-mono"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="shipperName" className="flex items-center gap-2">
-                  <FileText className="h-4 w-4" />
-                  Название грузоотправителя
-                </Label>
-                <Input
-                  id="shipperName"
-                  value={formData.shipperName}
-                  onChange={handleChange}
-                  placeholder="Введите название грузоотправителя"
-                  className="w-full"
-                />
-              </div>
-            </div>
-
-            {/* Пятая строка: Ид. грузополучателя в ЕГАИС, Название грузополучателя */}
-            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="recipientEgaisId" className="flex items-center gap-2">
-                  <Package className="h-4 w-4" />
-                  Ид. грузополучателя в ЕГАИС
-                </Label>
-                <Input
-                  id="recipientEgaisId"
-                  value={formData.recipientEgaisId}
-                  onChange={handleChange}
-                  placeholder="Введите ID грузополучателя в ЕГАИС"
-                  className="w-full font-mono"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="recipientName" className="flex items-center gap-2">
-                  <FileText className="h-4 w-4" />
-                  Название грузополучателя
-                </Label>
-                <Input
-                  id="recipientName"
-                  value={formData.recipientName}
-                  onChange={handleChange}
-                  placeholder="Введите название грузополучателя"
-                  className="w-full"
-                />
-              </div>
-            </div>
-
-            {/* Шестая строка: Цифра расширения SSCC, Международный регистрационный номер предприятия в системе GS1 */}
-            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="ssccExtension" className="flex items-center gap-2">
-                  <HashIcon className="h-4 w-4" />
-                  Цифра расширения SSCC
-                </Label>
-                <Input
-                  id="ssccExtension"
-                  value={formData.ssccExtension}
-                  onChange={handleChange}
-                  placeholder="Введите цифру расширения SSCC"
-                  className="w-full"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="gs1Code" className="flex items-center gap-2">
-                  <Globe className="h-4 w-4" />
-                  Международный регистрационный номер предприятия в системе GS1
-                </Label>
-                <Input
-                  id="gs1Code"
-                  value={formData.gs1Code}
-                  onChange={handleChange}
-                  placeholder="Введите номер GS1"
-                  className="w-full font-mono"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Седьмая строка: Дополнительная информация */}
-          <div className="space-y-2">
-            <Label htmlFor="additionalInfo" className="flex items-center gap-2">
-              <Info className="h-4 w-4" />
-              Дополнительная информация
-            </Label>
-            <Textarea
-              id="additionalInfo"
-              value={formData.additionalInfo}
-              onChange={handleChange}
-              placeholder="Введите дополнительную информацию..."
-              className="min-h-[120px] w-full"
-            />
           </div>
 
           {/* Кнопки */}
@@ -512,3 +395,145 @@ const CounterpartiesForm: React.FC<CounterpartiesFormProps> = ({ mode, id, onCan
 };
 
 export default CounterpartiesForm;
+
+{
+  /* Разделитель */
+}
+//  <div className="border-t pt-6">
+//  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+//    <div className="space-y-2">
+//      <Label htmlFor="lineNumber" className="flex items-center gap-2">
+//        <HashIcon className="h-4 w-4" />№ линии
+//      </Label>
+//      <Input
+//        id="lineNumber"
+//        value={formData.lineNumber}
+//        onChange={handleChange}
+//        placeholder="Введите номер линии"
+//        className="w-full"
+//      />
+//    </div>
+
+//    <div className="space-y-2">
+//      <Label htmlFor="contractorEgaisId" className="flex items-center gap-2">
+//        <User className="h-4 w-4" />
+//        Ид. контрагента в ЕГАИС
+//      </Label>
+//      <Input
+//        id="contractorEgaisId"
+//        value={formData.contractorEgaisId}
+//        onChange={handleChange}
+//        placeholder="Введите ID контрагента в ЕГАИС"
+//        className="w-full font-mono"
+//      />
+//    </div>
+//  </div>
+
+//  Четвертая строка: Ид. грузоотправителя в ЕГАИС, Название грузоотправителя */}
+//  {/* <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+//    <div className="space-y-2">
+//      <Label htmlFor="shipperEgaisId" className="flex items-center gap-2">
+//        <Truck className="h-4 w-4" />
+//        Ид. грузоотправителя в ЕГАИС
+//      </Label>
+//      <Input
+//        id="shipperEgaisId"
+//        value={formData.shipperEgaisId}
+//        onChange={handleChange}
+//        placeholder="Введите ID грузоотправителя в ЕГАИС"
+//        className="w-full font-mono"
+//      />
+//    </div>
+
+//    <div className="space-y-2">
+//      <Label htmlFor="shipperName" className="flex items-center gap-2">
+//        <FileText className="h-4 w-4" />
+//        Название грузоотправителя
+//      </Label>
+//      <Input
+//        id="shipperName"
+//        value={formData.shipperName}
+//        onChange={handleChange}
+//        placeholder="Введите название грузоотправителя"
+//        className="w-full"
+//      />
+//    </div>
+//  </div> */}
+
+//  {/* Пятая строка: Ид. грузополучателя в ЕГАИС, Название грузополучателя */}
+//  {/* <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+//    <div className="space-y-2">
+//      <Label htmlFor="recipientEgaisId" className="flex items-center gap-2">
+//        <Package className="h-4 w-4" />
+//        Ид. грузополучателя в ЕГАИС
+//      </Label>
+//      <Input
+//        id="recipientEgaisId"
+//        value={formData.recipientEgaisId}
+//        onChange={handleChange}
+//        placeholder="Введите ID грузополучателя в ЕГАИС"
+//        className="w-full font-mono"
+//      />
+//    </div>
+
+//    <div className="space-y-2">
+//      <Label htmlFor="recipientName" className="flex items-center gap-2">
+//        <FileText className="h-4 w-4" />
+//        Название грузополучателя
+//      </Label>
+//      <Input
+//        id="recipientName"
+//        value={formData.recipientName}
+//        onChange={handleChange}
+//        placeholder="Введите название грузополучателя"
+//        className="w-full"
+//      />
+//    </div>
+//  </div> */}
+
+//  {/* Шестая строка: Цифра расширения SSCC, Международный регистрационный номер предприятия в системе GS1 */}
+//  {/* <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+//    <div className="space-y-2">
+//      <Label htmlFor="ssccExtension" className="flex items-center gap-2">
+//        <HashIcon className="h-4 w-4" />
+//        Цифра расширения SSCC
+//      </Label>
+//      <Input
+//        id="ssccExtension"
+//        value={formData.ssccExtension}
+//        onChange={handleChange}
+//        placeholder="Введите цифру расширения SSCC"
+//        className="w-full"
+//      />
+//    </div>
+
+//    <div className="space-y-2">
+//      <Label htmlFor="gs1Code" className="flex items-center gap-2">
+//        <Globe className="h-4 w-4" />
+//        Международный регистрационный номер предприятия в системе GS1
+//      </Label>
+//      <Input
+//        id="gs1Code"
+//        value={formData.gs1Code}
+//        onChange={handleChange}
+//        placeholder="Введите номер GS1"
+//        className="w-full font-mono"
+//      />
+//    </div>
+//  </div>
+// </div>
+// */}
+// {/* Седьмая строка: Дополнительная информация */}
+// {/* <div className="space-y-2">
+//  <Label htmlFor="additionalInfo" className="flex items-center gap-2">
+//    <Info className="h-4 w-4" />
+//    Дополнительная информация
+//  </Label>
+//  <Textarea
+//    id="additionalInfo"
+//    value={formData.additionalInfo}
+//    onChange={handleChange}
+//    placeholder="Введите дополнительную информацию..."
+//    className="min-h-[120px] w-full"
+//  />
+// </div>

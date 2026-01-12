@@ -40,7 +40,7 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
     volume: '',
     egaisCode: '',
     externalCode: '',
-    expirationDate: '',
+    expirationDate: 'Не ограничен',
     alcoholPercent: '',
     contractorId: '',
     labelBox: '',
@@ -283,13 +283,23 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
           <CardContent className="space-y-4">
             {/* Первая строка: Код, Крепость */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="code">Код</Label>
                 <Input
                   id="code"
                   value={formData.code}
                   onChange={handleChange}
                   placeholder="Введите код"
+                />
+              </div> */}
+              <div className="space-y-2">
+                <Label htmlFor="name">Название</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Введите название"
+                  className="text-lg"
                 />
               </div>
 
@@ -307,7 +317,7 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
             </div>
 
             {/* Вторая строка: Название, Название для отображения */}
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="name">Название</Label>
                 <Input
@@ -328,7 +338,7 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
                   placeholder="Введите название для отображения"
                 />
               </div>
-            </div>
+            </div> */}
 
             {/* Третья строка: Штрихкод продукции, Срок годности */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -347,11 +357,20 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
                 <Label htmlFor="expiration" className="flex items-center gap-2">
                   Срок годности
                 </Label>
-                <DatePickerField
+                <Input
+                  id="expirationDate"
+                  // defaultValue={'Не ограничен'}
+                  readOnly
+                  value={formData.expirationDate}
+                  onChange={handleChange}
+                  placeholder="Введите срок годности"
+                  className="font-mono"
+                />
+                {/* <DatePickerField
                   value={formData.expirationDate ? new Date(formData.expirationDate) : undefined}
                   onChange={handleDateChange}
                   label=""
-                />
+                /> */}
               </div>
             </div>
 
@@ -368,7 +387,7 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
                 />
               </div>
 
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="externalCode">Внешний код</Label>
                 <Input
                   id="externalCode"
@@ -376,7 +395,7 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
                   onChange={handleChange}
                   placeholder="Введите внешний код"
                 />
-              </div>
+              </div> */}
             </div>
 
             {/* Пятая строка: Контрагент, Объём тары */}
@@ -422,25 +441,27 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="labelBox">labelBox</Label>
-              <Input
-                id="labelBox"
-                value={formData.labelBox}
-                onChange={handleChange}
-                placeholder="Введите labelBox"
-                className="font-mono"
-              />
-            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="labelBox">labelBox</Label>
+                <Input
+                  id="labelBox"
+                  value={formData.labelBox}
+                  onChange={handleChange}
+                  placeholder="Введите labelBox"
+                  className="font-mono"
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="labelPallet">Внешний labelPallet</Label>
-              <Input
-                id="labelPallet"
-                value={formData.labelPallet}
-                onChange={handleChange}
-                placeholder="Введите внешний код"
-              />
+              <div className="space-y-2">
+                <Label htmlFor="labelPallet">labelPallet</Label>
+                <Input
+                  id="labelPallet"
+                  value={formData.labelPallet}
+                  onChange={handleChange}
+                  placeholder="Введите внешний код"
+                />
+              </div>
             </div>
 
             {/* Дополнительная информация */}

@@ -61,9 +61,9 @@ export function ReportModal({ isOpen, onClose, report }: ReportModalProps) {
                 <p>
                   <b>Название:</b> {report.name}
                 </p>
-                <p>
+                {/* <p>
                   <b>Описание:</b> {report.description.toLowerCase()}
-                </p>
+                </p> */}
 
                 <p className="flex gap-1">
                   <b>Количество коробок: </b>

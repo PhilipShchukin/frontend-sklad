@@ -17,7 +17,8 @@ export enum ApiRoutes {
   DELETE_BOX = '/packaging/box/pallet',
 }
 export enum ApiRoutesTauri {
-  SAVE_TAURI = '/device-sync/xml',
+  SAVE_TAURI_XML = '/device-sync/xml',
+  SAVE_TAURI_CSV = '/device-sync/csv',
 }
 
 export enum ApiRoutesShipment {

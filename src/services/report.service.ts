@@ -22,8 +22,11 @@ export const getAllReport = async (): Promise<ReportGet[]> => {
   return (await axiosClassic.get(ApiRoutes.GET_REPORT)).data;
 };
 
-export const pushReportDB = async (data: any): Promise<boolean> => {
-  return await axiosClassic.post(ApiRoutes.CREATE_REPORT, data);
+export const pushReportDB = async (data: any): Promise<any> => {
+  const a = await axiosClassic.post(ApiRoutes.CREATE_REPORT, data);
+  console.log('a444444444444444444', a);
+  // return await axiosClassic.post(ApiRoutes.CREATE_REPORT, data);
+  return a;
 };
 
 export const moveCode = async (data: MoveBoxPayload): Promise<boolean> => {

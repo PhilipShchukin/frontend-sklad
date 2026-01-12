@@ -3,12 +3,14 @@
   "productName": "termet-service-sklad",
   "version": "0.1.0",
   "identifier": "com.test-sklad.app-12345",
+  
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173",
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build"
   },
+  
   "app": {
     
     "windows": [
@@ -23,13 +25,17 @@
       }
     ],
     
+    
     "security": {
+      
 
-      "dangerousDisableAssetCspModification": true
+      "dangerousDisableAssetCspModification": true,
+      "csp": null
       
     }
   },
   "bundle": {
+   
     "active": true,
     "targets": "all",
     "icon": [
