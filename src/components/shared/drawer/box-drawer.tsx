@@ -8,20 +8,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
-import { ActionDropDown } from './action-dropdown';
-import type { Status } from '@/services/constants';
+import { ActionDropDown } from './action-dropdown-box';
 import type { Code } from '@/types/pages-types/report-types';
-
-// type ProductCode = {
-//   id: string;
-//   code: string;
-//   boxNumber: number;
-//   palletNumber: number;
-//   status: Status;
-//   boxLabel: string;
-//   palletLabel: string;
-//   reportId: string;
-// };
 
 export function BoxDrawer({ codes }: { codes: Code[] }) {
   const [expanded, setExpanded] = React.useState(false);

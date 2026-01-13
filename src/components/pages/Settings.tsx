@@ -57,6 +57,7 @@ export default function Settings() {
     async function fetchAgents() {
       try {
         const res = await axios.post<ApiResponse>('http://localhost:4000/api/data/agents');
+        // const res = await axios.post<ApiResponse>('http://localhost:4000/api/data/agents');
 
         // Исправление: берем данные из поля agents_list
         const agentsData = res.data.agents_list || [];

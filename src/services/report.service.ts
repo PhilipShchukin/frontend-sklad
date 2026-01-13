@@ -2,7 +2,10 @@ import { axiosClassic } from '@/api/interceptors';
 import { ApiRoutes, Status } from './constants';
 import type {
   AllPalletsForBox,
+  ChangePalletStatus,
   ChangeStatus,
+  DeleteBox,
+  DeletePallet,
   MoveBoxPayload,
   ReportGet,
 } from '@/types/pages-types/report-types';
@@ -19,8 +22,11 @@ export const getAllReport = async (): Promise<ReportGet[]> => {
   return (await axiosClassic.get(ApiRoutes.GET_REPORT)).data;
 };
 
-export const pushReportDB = async (data: any): Promise<boolean> => {
-  return await axiosClassic.post(ApiRoutes.CREATE_REPORT, data);
+export const pushReportDB = async (data: any): Promise<any> => {
+  const a = await axiosClassic.post(ApiRoutes.CREATE_REPORT, data);
+  console.log('a444444444444444444', a);
+  // return await axiosClassic.post(ApiRoutes.CREATE_REPORT, data);
+  return a;
 };
 
 export const moveCode = async (data: MoveBoxPayload): Promise<boolean> => {
@@ -41,4 +47,23 @@ export const getBoxStatus = async (data: ChangeStatus) => {
 
 export const deletePalleteForBox = async (data: AllPalletsForBox) => {
   return await axiosClassic.post<boolean>(ApiRoutes.DELETE_PALLET_FOR_BOX, data);
+};
+
+export const changePalletStatus = async (data: ChangePalletStatus) => {
+  return await axiosClassic.patch<boolean>(ApiRoutes.CHANGE_PALLET_STATUS, data);
+};
+
+export const unpackPallet = async (data: DeletePallet) => {
+  return await axiosClassic.patch<boolean>(ApiRoutes.UNPACK_PALLET, data);
+};
+export const unpackBox = async (data: DeleteBox) => {
+  return await axiosClassic.patch<boolean>(ApiRoutes.UNPACK_BOX, data);
+};
+
+export const deletePallete = async (data: DeletePallet) => {
+  return await axiosClassic.delete<boolean>(ApiRoutes.DELETE_PALLET, { data });
+};
+
+export const deleteBox = async (data: DeleteBox) => {
+  return await axiosClassic.delete<boolean>(ApiRoutes.DELETE_BOX, { data });
 };

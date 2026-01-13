@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -23,8 +22,11 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import type { ReportMeta, Report } from '@/types/pages-types/report-types';
-import { CircleQuestionMark, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { usePushReportDB } from '@/hooks/use-report';
+import { fetch } from '@tauri-apps/plugin-http';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 export default function ReceivingReports() {
   const [reports, setReports] = useState<ReportMeta[]>([]);
@@ -33,34 +35,38 @@ export default function ReceivingReports() {
   const [openDelete, setOpenDelete] = useState(false);
 
   const fetchReports = async () => {
-    const data: ReportMeta[] = await invoke('list_reports');
+    const res = await fetch(API_URL + '/data/report-nest-all');
+
+    const data: ReportMeta[] = await res.json();
+    console.log('data', data);
+
     setReports(data);
     setSelected(null);
   };
 
   const fetchReportDetails = async (filename: string) => {
-    const data: Report = await invoke('read_report', { filename });
-    if (data) {
-      setSelected({ ...data, filename });
-    }
+    const res = await fetch(`${API_URL + '/data/report-nest-one'}/${filename}`);
+    const data: Report = await res.json();
+    console.log('data', data);
+    setSelected(data);
   };
 
   const deleteReport = async () => {
     if (!selected) return;
-    const success: boolean = await invoke('delete_report', {
-      filename: selected.filename,
+    await fetch(`${API_URL + '/data/report-nest-delete'}/${selected.filename}`, {
+      method: 'DELETE',
     });
-    if (success) {
-      await fetchReports();
-      setOpenDelete(false);
-    }
+    await fetchReports();
+    setOpenDelete(false);
   };
+
   const { mutate } = usePushReportDB();
+
   const addToDatabase = async () => {
     if (!selected) return;
     setLoadingAdd(true);
     try {
-      // Здесь логика добавления в базу
+      console.log('selected', selected);
       mutate(selected);
     } finally {
       setLoadingAdd(false);
@@ -80,7 +86,6 @@ export default function ReceivingReports() {
         </Button>
       </div>
 
-      {/* Таблица файлов */}
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -109,7 +114,6 @@ export default function ReceivingReports() {
         </Table>
       </div>
 
-      {/* Детали выбранного */}
       {selected && (
         <Card className="border shadow-sm">
           <CardHeader>
@@ -125,28 +129,24 @@ export default function ReceivingReports() {
               <p>
                 <b>Окончание фасовки:</b> {selected.EndDate}
               </p>
-
               <p>
                 <b>Дата производства:</b> {selected.ManufactureDate}
               </p>
               <p>
                 <b>Срок годности:</b> {selected.BBD}
               </p>
-
-              <p>
+              {/* <p>
                 <b>GTIN:</b> {selected.gtin}
-              </p>
+              </p> */}
               <p>
                 <b>Партия:</b> {selected.Batch}
               </p>
-
               <p>
                 <b>Название:</b> {selected.Name}
               </p>
-              <p>
+              {/* <p>
                 <b>Описание:</b> {selected.description.toLowerCase()}
-              </p>
-
+              </p> */}
               <p>
                 <b>Количество коробок:</b> {selected.units.boxes.length}
               </p>
@@ -165,9 +165,7 @@ export default function ReceivingReports() {
                 {loadingAdd && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {loadingAdd ? 'Загрузка...' : 'Добавить в базу'}
               </Button>
-              {/* <Button variant="destructive" className="cursor-pointer" onClick={deleteReport}>
-                Удалить
-              </Button> */}
+
               <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
                 <AlertDialogTrigger asChild>
                   <Button variant="destructive" className="cursor-pointer">
@@ -178,12 +176,8 @@ export default function ReceivingReports() {
                   <AlertDialogHeader>
                     <AlertDialogTitle>Удалить отчёт?</AlertDialogTitle>
                     <AlertDialogDescription className="text-base">
-                      <div className="flex">
-                        Вы действительно хотите удалить отчёт
-                        <CircleQuestionMark className="ml-1" />
-                      </div>
+                      Вы действительно хотите удалить отчёт
                       <b>{selected.filename.replace(/\.json$/, '')}</b>
-                      <br /> Это действие необратимо.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

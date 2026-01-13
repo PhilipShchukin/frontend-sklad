@@ -1,4 +1,14 @@
-import { Home, UserRoundX, Truck, Settings, ChevronUp, Database } from 'lucide-react';
+import {
+  Home,
+  UserRoundX,
+  Truck,
+  Settings,
+  ChevronUp,
+  Database,
+  FolderSync,
+  HatGlasses,
+  FileText,
+} from 'lucide-react';
 import { Link } from 'react-router';
 
 import {
@@ -45,10 +55,25 @@ const items = [
     icon: Truck,
   },
   {
-    title: 'Настройки',
-    url: '/settings',
-    icon: Settings,
+    title: 'Синхронизация',
+    url: '/sync',
+    icon: FolderSync,
   },
+  {
+    title: 'Контрагенты',
+    url: '/counterparties',
+    icon: HatGlasses,
+  },
+  {
+    title: 'Номенкулатура',
+    url: '/nomenclature',
+    icon: FileText,
+  },
+  // {
+  //   title: 'Настройки',
+  //   url: '/settings',
+  //   icon: Settings,
+  // },
 ];
 
 export function AppSidebar() {

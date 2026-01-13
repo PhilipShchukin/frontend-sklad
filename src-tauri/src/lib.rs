@@ -1,100 +1,83 @@
-// #[cfg_attr(mobile, tauri::mobile_entry_point)]
+use std::process::{Command, Stdio};
+use std::thread;
+use std::io::{BufReader, BufRead};
+use std::path::Path;
+
+use serde_json::Value;
+
+use tauri::Manager; 
+
+#[tauri::command]
+async fn fetch_reports() -> Result<Value, String> {
+    let resp = reqwest::get("http://127.0.0.1:8765/ping-backend")
+    // let resp = reqwest::get("http://172.16.16.1:8765/ping-backend")
+        .await
+        .map_err(|e| e.to_string())?
+        .json::<Value>()
+        .await
+        .map_err(|e| e.to_string())?;
+    Ok(resp)
+}
+
 // pub fn run() {
-//   tauri::Builder::default()
-//   .plugin(tauri::plugin::TauriPlugin::new("fs")) 
-//   .invoke_handler(|_app, _window, cmd| {
-//       tauri::generate_handler![list_reports](cmd)
-//   })
-//     .setup(|app| {
-//       if cfg!(debug_assertions) {
-//         app.handle().plugin(
-//           tauri_plugin_log::Builder::default()
-//             .level(log::LevelFilter::Info)
-//             .build(),
-//         )?;
-//       }
-//       Ok(())
-//     })
-//     .run(tauri::generate_context!())
-//     .expect("error while running tauri application");
+    
+    
+  
+//     // ==== Запуск Tauri ====
+//     tauri::Builder::default()
+//         .plugin(tauri_plugin_http::init())
+//         .plugin(tauri_plugin_dialog::init())
+//         .plugin(tauri_plugin_fs::init())
+//         .setup(|app| {
+//             // Запускаем сервер при старте Tauri
+//             adb_server::start();
+            
+//             println!("ADB Server начал работу");
+
+            
+//             Ok(())
+//         })
+        
+//         .invoke_handler(tauri::generate_handler![fetch_reports])
+//         .run(tauri::generate_context!())
+     
+//         .expect("error while running tauri app");
+
+
+        
 // }
 
-
-// const REPORTS_DIR: &str = "D:/records-dev"; // поменяй путь 
-
-use std::fs;
-use std::path::PathBuf;
-
-const REPORTS_DIR: &str = "D:/records-dev";
-
-#[derive(serde::Serialize)]
-struct ReportMeta {
-    filename: String,
-    docId: String,
-    Name: String,
-    Batch: String,
-    StartDate: String,
-    EndDate: String,
-}
-
-#[tauri::command]
-fn list_reports() -> Vec<ReportMeta> {
-    let mut result = Vec::new();
-
-    if let Ok(entries) = fs::read_dir(REPORTS_DIR) {
-        for entry in entries.flatten() {
-            let path = entry.path();
-            if path.extension().map(|ext| ext == "json").unwrap_or(false) {
-                if let Ok(content) = fs::read_to_string(&path) {
-                    if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
-                        result.push(ReportMeta {
-                            filename: path.file_name().unwrap().to_string_lossy().to_string(),
-                            docId: json["docId"].as_str().unwrap_or("").to_string(),
-                            Name: json["Name"].as_str().unwrap_or("").to_string(),
-                            Batch: json["Batch"].as_str().unwrap_or("").to_string(),
-                            StartDate: json["StartDate"].as_str().unwrap_or("").to_string(),
-                            EndDate: json["EndDate"].as_str().unwrap_or("").to_string(),
-                        });
-                    }
-                }
-            }
-        }
-    }
-
-    result
-}
-
-#[tauri::command]
-fn read_report(filename: String) -> Option<serde_json::Value> {
-    let path = PathBuf::from(REPORTS_DIR).join(&filename);
-    if path.exists() {
-        if let Ok(content) = fs::read_to_string(&path) {
-            if let Ok(json) = serde_json::from_str::<serde_json::Value>(&content) {
-                return Some(json);
-            }
-        }
-    }
-    None
-}
-
-#[tauri::command]
-fn delete_report(filename: String) -> bool {
-    let path = PathBuf::from(REPORTS_DIR).join(&filename);
-    if path.exists() {
-        return fs::remove_file(path).is_ok();
-    }
-    false
-}
-
 pub fn run() {
-    tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![
-            list_reports,
-            read_report,
-            delete_report
-        ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri app");
+    let app = tauri::Builder::default()
+        .plugin(tauri_plugin_http::init())
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_fs::init())
+
+        .setup(|_app| {
+            adb_server::start();
+            println!("[ADB] Server started");
+            Ok(())
+        })
+
+        .invoke_handler(tauri::generate_handler![fetch_reports])
+
+        // 🔥 ВАЖНО: build(), а не run()
+        .build(tauri::generate_context!())
+        .expect("error while building tauri app");
+
+    // 🔥 ВОТ ЗДЕСЬ обработка ExitRequested
+    app.run(|_app_handle, event| {
+        if let tauri::RunEvent::ExitRequested { .. } = event {
+            println!("[TAURI] Exit requested, stopping ADB server...");
+            adb_server::stop_server();
+        }
+    });
 }
+
+
+
+pub mod adb_server;
+
+
 
 
