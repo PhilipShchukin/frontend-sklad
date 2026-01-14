@@ -166,8 +166,8 @@ const NomenclatureList: React.FC<NomenclatureListProps> = ({ onEdit }) => {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {item.contractorId ? (
-                    <Badge variant="secondary">{item.contractorId}</Badge>
+                  {item.name ? (
+                    <Badge variant="secondary">{item.name}</Badge>
                   ) : (
                     <span className="text-muted-foreground">Не указан</span>
                   )}

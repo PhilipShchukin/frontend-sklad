@@ -19,6 +19,8 @@ export enum ApiRoutes {
 export enum ApiRoutesTauri {
   SAVE_TAURI_XML = '/device-sync/xml',
   SAVE_TAURI_CSV = '/device-sync/csv',
+  SAVE_TAURI_TXT = '/device-sync/txt',
+  SAVE_TAURI_XLSX = '/device-sync/xlsx',
 }
 
 export enum ApiRoutesShipment {
