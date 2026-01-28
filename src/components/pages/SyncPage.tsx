@@ -8,7 +8,6 @@ export default function SyncPage() {
       <div className="mx-auto max-w-7xl">
         <SyncPanel />
 
-        {/* Дополнительная информация */}
         <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
           <Card>
             <CardHeader className="pb-3">

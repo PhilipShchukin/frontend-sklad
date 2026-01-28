@@ -36,7 +36,6 @@ export interface Counterparty {
 interface CounterpartiesListProps {
   onEdit: (id: string) => void;
 }
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 const API_URL = 'http://localhost:4000/api';
 
@@ -66,10 +65,6 @@ const CounterpartiesList: React.FC<CounterpartiesListProps> = ({ onEdit }) => {
   useEffect(() => {
     fetchReports();
   }, []);
-
-  // if (isLoading) {
-  //   return <div className="p-4">Загрузка контрагентов...</div>;
-  // }
 
   if (error) {
     return <div className="text-destructive p-4">{error}</div>;

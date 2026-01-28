@@ -29,10 +29,6 @@ const Nomenclature: React.FC = () => {
         <>
           <div className="mb-6 flex items-center justify-between">
             <div>
-              {/* <h1 className="flex items-center gap-3 text-3xl font-bold">
-                <Package className="h-8 w-8" />
-                Номенклатура
-              </h1> */}
               <p className="mt-2 text-xl font-semibold">Управление справочником номенклатуры</p>
             </div>
             <Button onClick={handleCreate}>
@@ -46,10 +42,6 @@ const Nomenclature: React.FC = () => {
         <>
           <div className="mb-6 flex items-center justify-between">
             <div>
-              {/* <h1 className="flex items-center gap-3 text-3xl font-bold">
-                <Package className="h-8 w-8" />
-                {mode === 'create' ? 'Создание номенклатуры' : 'Редактирование номенклатуры'}
-              </h1> */}
               <p className="mt-2 text-xl font-semibold">
                 {mode === 'create'
                   ? 'Заполните информацию о новой номенклатуре'

@@ -1,14 +1,4 @@
-import {
-  Home,
-  UserRoundX,
-  Truck,
-  Settings,
-  ChevronUp,
-  Database,
-  FolderSync,
-  HatGlasses,
-  FileText,
-} from 'lucide-react';
+import { Home, Truck, ChevronUp, Database, Orbit } from 'lucide-react';
 import { Link } from 'react-router';
 
 import {
@@ -39,36 +29,46 @@ const items = [
     url: '/',
     icon: Home,
   },
-  {
-    title: 'Авторизация',
-    url: '/authorization',
-    icon: UserRoundX,
-  },
+  // {
+  //   title: 'Авторизация',
+  //   url: '/authorization',
+  //   icon: UserRoundX,
+  // },
   {
     title: 'База данных',
     url: '/database',
     icon: Database,
   },
+  // {
+  //   title: 'Отгрузка',
+  //   url: '/shipment',
+  //   icon: Truck,
+  // },
   {
     title: 'Отгрузка',
-    url: '/shipment',
+    url: '/ship',
     icon: Truck,
   },
   {
-    title: 'Синхронизация',
-    url: '/sync',
-    icon: FolderSync,
+    title: 'Портал',
+    url: '/portal',
+    icon: Orbit,
   },
-  {
-    title: 'Контрагенты',
-    url: '/counterparties',
-    icon: HatGlasses,
-  },
-  {
-    title: 'Номенкулатура',
-    url: '/nomenclature',
-    icon: FileText,
-  },
+  // {
+  //   title: 'Синхронизация',
+  //   url: '/sync',
+  //   icon: FolderSync,
+  // },
+  // {
+  //   title: 'Контрагенты',
+  //   url: '/counterparties',
+  //   icon: HatGlasses,
+  // },
+  // {
+  //   title: 'Номенкулатура',
+  //   url: '/nomenclature',
+  //   icon: FileText,
+  // },
   // {
   //   title: 'Настройки',
   //   url: '/settings',

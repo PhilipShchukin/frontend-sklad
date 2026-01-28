@@ -39,7 +39,18 @@ const axiosTauriApiAdapter: AxiosAdapter = async (config) => {
     request: null,
   };
 
-  return axiosRes;
+  // return axiosRes;
+
+  // 🔥 КЛЮЧЕВОЙ ФИКС
+  if (res.status >= 200 && res.status < 300) {
+    return axiosRes; // ✅ success
+  }
+
+  // ❌ error → axios onError
+  return Promise.reject({
+    ...axiosRes,
+    isAxiosError: true,
+  });
 };
 
 export default axiosTauriApiAdapter;

@@ -72,9 +72,6 @@ const SyncPanel = () => {
       },
     });
   };
-  console.log('deviceStatus', deviceStatus);
-  console.log('dbStats', dbStats);
-  console.log('syncResult', syncResult);
 
   // Обработка ошибок
   if (error && !isLoading) {

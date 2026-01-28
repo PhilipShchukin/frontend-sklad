@@ -1,61 +1,8 @@
 import { cn } from '@/lib/utils';
+import type { Marking } from '@/services/constants';
 import { AnimatePresence, motion } from 'motion/react';
 
 import { useState } from 'react';
-
-// export const HoverEffect = ({
-//   items,
-//   className,
-//   cardClassName,
-// }: {
-//   items: {
-//     name?: string;
-//     description?: string;
-//     link?: string;
-//   }[];
-//   className?: string;
-//   cardClassName?: string;
-// }) => {
-//   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
-//   return (
-//     <div className={cn('grid grid-cols-1 py-10 md:grid-cols-2 lg:grid-cols-3', className)}>
-//       {items.map((item, idx) => (
-//         <a
-//           href={item?.link}
-//           key={item?.link}
-//           className="group relative block h-full w-full p-2"
-//           onMouseEnter={() => setHoveredIndex(idx)}
-//           onMouseLeave={() => setHoveredIndex(null)}
-//         >
-//           <AnimatePresence>
-//             {hoveredIndex === idx && (
-//               <motion.span
-//                 className="absolute inset-0 block h-full w-full rounded-3xl bg-neutral-200 dark:bg-slate-800/[0.8]"
-//                 layoutId="hoverBackground"
-//                 initial={{ opacity: 0 }}
-//                 animate={{
-//                   opacity: 1,
-//                   transition: { duration: 0.15 },
-//                 }}
-//                 exit={{
-//                   opacity: 0,
-//                   transition: { duration: 0.15, delay: 0.2 },
-//                 }}
-//               />
-//             )}
-//           </AnimatePresence>
-//           <Card className={cardClassName}>
-//             {/* <CardTitle>{item.title}</CardTitle> */}
-//             <CardTitle>{item.name}</CardTitle>
-//             <CardDescription>{item.description}</CardDescription>
-//             {/* <CardDescription>{item.wer}</CardDescription> */}
-//           </Card>
-//         </a>
-//       ))}
-//     </div>
-//   );
-// };
 
 interface HoverItem {
   name: string;
@@ -63,6 +10,7 @@ interface HoverItem {
   batch: string;
   status: string;
   description: string;
+  marking: Marking;
   // link?: string;
   onClick?: () => void;
 }
@@ -113,7 +61,7 @@ export const HoverEffect = ({ items, className, cardClassName }: HoverEffectProp
               />
             )}
           </AnimatePresence>
-          <Card className={cardClassName}>
+          <Card className={cardClassName} marking={item.marking}>
             <CardTitle>{item.name}</CardTitle>
             <CardTitle>GTIN: {item.gtin}</CardTitle>
             <CardDescription>Партия: {item.batch}</CardDescription>
@@ -126,18 +74,21 @@ export const HoverEffect = ({ items, className, cardClassName }: HoverEffectProp
   );
 };
 
-// Card, CardTitle, CardDescription остаются без изменений
 export const Card = ({
   className,
   children,
+  marking,
 }: {
   className?: string;
   children: React.ReactNode;
+  marking: Marking;
 }) => {
+  const isFailed = marking === 'FAILED';
   return (
     <div
       className={cn(
-        'relative z-20 h-full w-full overflow-hidden rounded-2xl border border-transparent bg-black p-4 group-hover:border-slate-700 dark:border-white/[0.2]',
+        'relative z-20 h-full w-full overflow-hidden rounded-2xl border border-transparent p-4 group-hover:border-slate-700 dark:border-white/[0.2]',
+        isFailed ? 'bg-orange-500' : 'bg-black',
         className,
       )}
     >

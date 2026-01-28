@@ -8,8 +8,77 @@ import type {
   DeletePallet,
   MoveBoxPayload,
   Report,
+  ReportGet,
 } from '@/types/pages-types/report-types';
 import { toast } from 'sonner';
+
+import axios from 'axios';
+
+export const getAxiosErrorMessage = (error: unknown): string => {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data;
+
+    if (Array.isArray(data?.message)) {
+      return data.message.join('\n');
+    }
+
+    if (typeof data?.message === 'string') {
+      return data.message;
+    }
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return 'Произошла неизвестная ошибка';
+};
+
+export const parseApiError = (
+  error: unknown,
+): {
+  type: 'dto' | 'business' | 'server' | 'unknown';
+  message: string;
+  messages?: string[];
+} => {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data;
+    const status = error.response?.status;
+
+    if (status === 400 && Array.isArray(data?.message)) {
+      return {
+        type: 'dto',
+        message: 'Ошибка валидации данных',
+        messages: data.message,
+      };
+    }
+
+    if (typeof data?.message === 'string') {
+      return {
+        type: 'business',
+        message: data.message,
+      };
+    }
+
+    // fallback
+    return {
+      type: 'server',
+      message: 'Ошибка сервера',
+    };
+  }
+
+  if (error instanceof Error) {
+    return {
+      type: 'unknown',
+      message: error.message,
+    };
+  }
+
+  return {
+    type: 'unknown',
+    message: 'Неизвестная ошибка',
+  };
+};
 
 export function useGetReport() {
   const { data, isLoading, isSuccess } = useQuery({
@@ -22,17 +91,44 @@ export function useGetReport() {
 
 export const usePushReportDB = () => {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (data: Report) => Api.report.pushReportDB(data),
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['report'] });
-      // toast('Отчет добавлен в базу');
-      toast.success('Отчет добавлен в базу');
+      queryClient.invalidateQueries({ queryKey: ['reports'] });
+      toast.success('Отчет создан. Маркировка выполняется');
     },
-    onError: (error: Error) => {
+
+    onError: (error) => {
+      console.log('error', error);
+      const parsed = parseApiError(error);
+
+      if (parsed.type === 'dto' && parsed.messages) {
+        parsed.messages.forEach((msg) => {
+          toast.error(msg);
+        });
+        return;
+      }
+
+      toast.error(parsed.message);
+    },
+  });
+};
+
+export const usePushPortal = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: ReportGet) => Api.report.pushPortal(data),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['portal'] });
+      toast.success('Отчет отправлен');
+    },
+
+    onError: (error) => {
       toast.error(error.message);
-      // toast.error(error.message);
-      // toast.error('Отчет не добавлен в базу');
     },
   });
 };
@@ -58,9 +154,9 @@ export const usePalletsAll = (boxNumber?: number, reportId?: string) => {
     queryFn: async () => {
       if (!boxNumber || !reportId) return [];
       const { data } = await Api.report.PalletsAll({ boxNumber, reportId });
-      return data; // массив допустимых паллет
+      return data;
     },
-    enabled: false, // не выполнять автоматически
+    enabled: false,
   });
 
   return query;
@@ -76,7 +172,6 @@ export const useChangeStatusBox = () => {
     },
     onError: (error: Error) => {
       toast.error(error.message);
-      // toast.error('Коробка не перемещен');
     },
   });
 };
@@ -91,7 +186,7 @@ export const useGetStatusBox = (boxNumber?: number, reportId?: string) => {
       console.log('useGetStatusBox', data);
       return data;
     },
-    enabled: false, // не выполнять автоматически
+    enabled: false,
   });
 
   return query;

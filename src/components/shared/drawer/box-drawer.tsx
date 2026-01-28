@@ -15,17 +15,13 @@ export function BoxDrawer({ codes }: { codes: Code[] }) {
   const [expanded, setExpanded] = React.useState(false);
   const gridRef = React.useRef<HTMLDivElement>(null);
 
-  // Уникальные коробки
   const uniqueBoxes = Array.from(new Map(codes.map((c) => [c.boxNumber, c])).values());
 
-  // Ограничение для "свернутого" вида
   const VISIBLE_LIMIT = 24;
-  //   const SCROLL_LIMIT = 150;
   const SCROLL_LIMIT = 40;
 
   const visibleBoxes = expanded ? uniqueBoxes : uniqueBoxes.slice(0, VISIBLE_LIMIT);
 
-  // При закрытии "Показать больше" возвращаем скролл к началу
   React.useEffect(() => {
     if (!expanded && gridRef.current) {
       gridRef.current.scrollTop = 0;

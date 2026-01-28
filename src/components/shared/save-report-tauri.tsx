@@ -5,16 +5,14 @@ import {
   useGenerateXlsx,
   useGenerateXml,
 } from '@/hooks/use-generate-xml';
-import { save } from '@tauri-apps/plugin-dialog'; // ✅ Диалог из плагина [citation:9]
-import { writeTextFile } from '@tauri-apps/plugin-fs'; // ✅ ФС из плагина [citation:1]
-import { toast } from 'sonner'; // или другая библиотека уведомлений
+import { save } from '@tauri-apps/plugin-dialog';
+import { writeTextFile } from '@tauri-apps/plugin-fs';
+import { toast } from 'sonner';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontalIcon } from 'lucide-react';
@@ -28,8 +26,7 @@ export function ShipmentHeaderActions({ filename }: { filename: string }) {
   const handleClickXml = async () => {
     mutateXml(filename, {
       onSuccess: async (serverResponse) => {
-        // Сервер возвращает объект { xml, fileName, localPath }
-        const xmlContent = serverResponse.xml; // ⬅️ Достаем строку XML напрямую
+        const xmlContent = serverResponse.xml;
 
         // 1. Открываем окно "Сохранить как"
         const selectedPath = await save({
@@ -38,24 +35,18 @@ export function ShipmentHeaderActions({ filename }: { filename: string }) {
         });
 
         if (!selectedPath) {
-          // Пользователь нажал "Отмена"
           return;
         }
 
         try {
           // 2. Сохраняем XML в выбранный файл
-          await writeTextFile(selectedPath, xmlContent); // [citation:1]
+          await writeTextFile(selectedPath, xmlContent);
 
           // 3. Уведомление об успехе
           toast.success('XML файл успешно сохранён', {
             description: `Путь: ${selectedPath}`,
           });
           console.log('Файл сохранён:', selectedPath);
-
-          // 4. (Опционально) Открываем папку с файлом
-          // Если нужно, подключите и используйте @tauri-apps/plugin-shell
-          // const { open } = await import('@tauri-apps/plugin-shell');
-          // await open(selectedPath);
         } catch (error) {
           console.error('Ошибка сохранения:', error);
           toast.error('Не удалось сохранить файл');
@@ -160,41 +151,30 @@ export function ShipmentHeaderActions({ filename }: { filename: string }) {
   const handleClickXlsx = async () => {
     mutateXlsx(filename, {
       onSuccess: async (serverResponse) => {
-        // Сервер возвращает объект { xml, fileName, localPath }
-        const xlsxContent = serverResponse.xlsx; // ⬅️ Достаем строку XML напрямую
+        const xlsxContent = serverResponse.xlsx;
 
-        // 1. Открываем окно "Сохранить как"
         const selectedPath = await save({
           filters: [{ name: 'XLSX Files', extensions: ['xlsx'] }],
-          defaultPath: serverResponse.fileName || 'shipment.xlsx', // Предлагаем имя с сервера
+          defaultPath: serverResponse.fileName || 'shipment.xlsx',
         });
 
         if (!selectedPath) {
-          // Пользователь нажал "Отмена"
           return;
         }
 
         try {
-          // 2. Сохраняем XML в выбранный файл
-          await writeTextFile(selectedPath, xlsxContent); // [citation:1]
+          await writeTextFile(selectedPath, xlsxContent);
 
-          // 3. Уведомление об успехе
           toast.success('XLSX файл успешно сохранён', {
             description: `Путь: ${selectedPath}`,
           });
           console.log('Файл сохранён:', selectedPath);
-
-          // 4. (Опционально) Открываем папку с файлом
-          // Если нужно, подключите и используйте @tauri-apps/plugin-shell
-          // const { open } = await import('@tauri-apps/plugin-shell');
-          // await open(selectedPath);
         } catch (error) {
           console.error('Ошибка сохранения:', error);
           toast.error('Не удалось сохранить файл');
         }
       },
       onError: (error) => {
-        // toast.error('Ошибка при генерации XML');
         toast.error(error.message);
         console.error(error);
       },
@@ -207,8 +187,6 @@ export function ShipmentHeaderActions({ filename }: { filename: string }) {
         <MoreHorizontalIcon />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {/* <DropdownMenuLabel>My Account</DropdownMenuLabel> */}
-        {/* <DropdownMenuSeparator /> */}
         <DropdownMenuItem>
           <Button onClick={handleClickXml} disabled={isPendingXml}>
             {isPendingXml ? 'Генерация...' : 'XML-по умолчанию'}
@@ -230,9 +208,6 @@ export function ShipmentHeaderActions({ filename }: { filename: string }) {
             {isPendingXlsx ? 'Генерация...' : 'XLSX'}
           </Button>
         </DropdownMenuItem>
-        {/* <DropdownMenuItem>Billing</DropdownMenuItem>
-    <DropdownMenuItem>Team</DropdownMenuItem>
-    <DropdownMenuItem>Subscription</DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

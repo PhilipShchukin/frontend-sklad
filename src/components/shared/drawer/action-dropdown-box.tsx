@@ -29,7 +29,6 @@ export function ActionDropDown({ boxNumber, reportId }: { boxNumber: number; rep
   const { mutate: changeStatus } = useChangeStatusBox();
   const { mutate: deletePallet } = useDeletePalleteForBox();
   const { data: pallets, isLoading, refetch } = usePalletsAll(boxNumber, reportId);
-  console.log('pallets444', pallets);
   const {
     data: getStatus,
     isLoading: isGetStatusLoading,
@@ -59,13 +58,6 @@ export function ActionDropDown({ boxNumber, reportId }: { boxNumber: number; rep
       <DropdownMenuContent align="end" className="w-[200px]">
         <DropdownMenuLabel>Действия с коробкой #{boxNumber}</DropdownMenuLabel>
         <DropdownMenuGroup>
-          {/* <DropdownMenuItem>Просмотреть детали</DropdownMenuItem> */}
-          {/* <DropdownMenuItem
-            className="cursor-pointer"
-            onClick={() => deletePallet({ boxNumber, reportId })}
-          >
-            Удалить с палеты
-          </DropdownMenuItem> */}
           <DropdownMenuSeparator />
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className="cursor-pointer">

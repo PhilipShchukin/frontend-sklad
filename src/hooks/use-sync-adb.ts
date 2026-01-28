@@ -1,8 +1,5 @@
-// hooks/useSync.ts
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetch } from '@tauri-apps/plugin-http';
-
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 interface DeviceStatus {
   connected: boolean;
@@ -35,7 +32,6 @@ interface DbStats {
 
 const API_BASE_URL = 'http://localhost:4000/api/device-sync';
 
-// API функции
 const api = {
   checkDeviceStatus: async (): Promise<DeviceStatus> => {
     const response = await fetch(`${API_BASE_URL}/status`);
@@ -70,15 +66,13 @@ export const syncKeys = {
 export const useSync = () => {
   const queryClient = useQueryClient();
 
-  // Запрос статуса устройства
   const deviceStatusQuery = useQuery({
     queryKey: syncKeys.deviceStatus(),
     queryFn: api.checkDeviceStatus,
-    refetchInterval: 30000, // Автообновление каждые 30 секунд
+    refetchInterval: 30000,
     retry: 2,
   });
 
-  // Запрос статистики БД
   const dbStatsQuery = useQuery({
     queryKey: syncKeys.dbStats(),
     queryFn: async () => {

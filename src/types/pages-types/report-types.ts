@@ -1,4 +1,5 @@
 import type { Status } from '@/services/constants';
+import type { Marking } from '@/services/constants';
 
 export type ProductCode = string;
 
@@ -51,6 +52,7 @@ export type ReportGet = {
   name: string;
   description: string;
   status: Status;
+  marking: Marking;
 };
 
 export type Code = {

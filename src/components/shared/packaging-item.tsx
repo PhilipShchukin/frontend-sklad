@@ -28,6 +28,7 @@ export function CardHoverItem() {
     batch: item.batch,
     status: item.status,
     description: item.description,
+    marking: item.marking,
     // link: `#`,
     onClick: () => handleCardClick(item),
   }));

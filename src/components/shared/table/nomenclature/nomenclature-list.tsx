@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router';
 
-import { Edit, Trash2, Plus, Barcode, Package, Droplets } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -12,7 +11,6 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useNomenclature } from '@/hooks/use-nomenclature';
 import { fetch } from '@tauri-apps/plugin-http';
 
 export interface Nomenclature {
@@ -53,12 +51,6 @@ interface NomenclatureListProps {
 }
 
 const NomenclatureList: React.FC<NomenclatureListProps> = ({ onEdit }) => {
-  // const { data: nomenclature, isLoading } = useNomenclature();
-
-  // if (isLoading) {
-  //   return <div className="p-4">Загрузка номенклатуры...</div>;
-  // }
-
   const [nomenclature, setNomenclature] = useState<Nomenclature[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -98,18 +90,6 @@ const NomenclatureList: React.FC<NomenclatureListProps> = ({ onEdit }) => {
 
   return (
     <div className="container mx-auto p-6">
-      {/* <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Номенклатура</h1>
-          <p className="text-muted-foreground">Управление номенклатурой</p>
-        </div>
-        <Link to="/nomenclature/new">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Новая номенклатура
-          </Button>
-        </Link>
-      </div> */}
       {error && <div className="text-destructive mb-4">{error}</div>}
 
       <div className="rounded-lg border">
@@ -118,20 +98,10 @@ const NomenclatureList: React.FC<NomenclatureListProps> = ({ onEdit }) => {
             <TableRow>
               <TableHead>Код</TableHead>
               <TableHead>Название</TableHead>
-              <TableHead>
-                {/* <Barcode className="h-4 w-4" /> */}
-                Штрихкод
-              </TableHead>
-              <TableHead>
-                {/* <Package className="h-4 w-4" /> */}
-                Объем
-              </TableHead>
-              <TableHead>
-                {/* <Droplets className="h-4 w-4" /> */}
-                Крепость
-              </TableHead>
+              <TableHead>Штрихкод</TableHead>
+              <TableHead>Объем</TableHead>
+              <TableHead>Крепость</TableHead>
               <TableHead>Контрагент</TableHead>
-              {/* <TableHead>Дата создания</TableHead> */}
               <TableHead className="text-right">Действия</TableHead>
             </TableRow>
           </TableHeader>
@@ -149,19 +119,16 @@ const NomenclatureList: React.FC<NomenclatureListProps> = ({ onEdit }) => {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    {/* <Barcode className="h-4 w-4" /> */}
                     <code className="font-mono text-sm">{item.productBarcode}</code>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    {/* <Package className="h-4 w-4" /> */}
                     <span>{item.volume} л</span>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    {/* <Droplets className="h-4 w-4" /> */}
                     <Badge variant="outline">{item.alcoholPercent}%</Badge>
                   </div>
                 </TableCell>
@@ -172,10 +139,8 @@ const NomenclatureList: React.FC<NomenclatureListProps> = ({ onEdit }) => {
                     <span className="text-muted-foreground">Не указан</span>
                   )}
                 </TableCell>
-                {/* <TableCell>{new Date(item.createdAt).toLocaleDateString('ru-RU')}</TableCell> */}
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    {/* <Link to={`${API_URL}/table/nomenclature/${item.id}/edit`}> */}
                     <Button variant="outline" size="sm" onClick={() => onEdit(item.id)}>
                       <Edit className="h-4 w-4" />
                     </Button>

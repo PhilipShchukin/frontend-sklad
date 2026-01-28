@@ -1,4 +1,3 @@
-// components/ReportModal/ReportModal.tsx
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
@@ -7,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import type { ReportGet } from '@/types/pages-types/report-types';
 import { BoxDrawer } from '../drawer/box-drawer';
 import { PalletDrawer } from '../drawer/pallet-drawer';
+import { usePushPortal } from '@/hooks/use-report';
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -20,17 +20,20 @@ export function ReportModal({ isOpen, onClose, report }: ReportModalProps) {
   const uniquePallets = Array.from(new Map(report.codes.map((c) => [c.palletNumber, c])).values());
   const uniqueBox = Array.from(new Map(report.codes.map((c) => [c.boxNumber, c])).values());
 
-  // console.log('uniquePallets', uniquePallets.length);
-  // console.log('codes', report.codes.length);
+  const { mutate } = usePushPortal();
+
+  const pushPortal = async () => {
+    try {
+      mutate(report);
+    } finally {
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="!max-w-[800px]">
         <DialogHeader>
           <DialogTitle>{report.name}</DialogTitle>
-          {/* <DialogDescription className="sr-only">
-            Детальная информация о отчете {report.name}
-          </DialogDescription> */}
         </DialogHeader>
 
         {report && (
@@ -61,9 +64,6 @@ export function ReportModal({ isOpen, onClose, report }: ReportModalProps) {
                 <p>
                   <b>Название:</b> {report.name}
                 </p>
-                {/* <p>
-                  <b>Описание:</b> {report.description.toLowerCase()}
-                </p> */}
 
                 <p className="flex gap-1">
                   <b>Количество коробок: </b>
@@ -83,6 +83,9 @@ export function ReportModal({ isOpen, onClose, report }: ReportModalProps) {
               </div>
 
               <div className="flex justify-end gap-3 pt-4">
+                <Button variant="default" className="cursor-pointer" onClick={pushPortal}>
+                  Отправить отчет
+                </Button>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="destructive" className="cursor-pointer">
@@ -98,26 +101,3 @@ export function ReportModal({ isOpen, onClose, report }: ReportModalProps) {
     </Dialog>
   );
 }
-
-// <div className="space-y-4">
-//           {report.description && (
-//             <div>
-//               <h3 className="font-semibold">Описание</h3>
-//               <p className="text-gray-600">{report.description}</p>
-//             </div>
-//           )}
-
-//           <div>
-//             <h3 className="font-semibold">Дата создания</h3>
-//             <p className="text-gray-600">
-//               {new Date(report.startDate).toLocaleDateString('ru-RU')}
-//             </p>
-//           </div>
-
-//           <div>
-//             <h3 className="font-semibold">ID отчета</h3>
-//             <p className="text-gray-600">{report.id}</p>
-//           </div>
-
-//           {/* Добавьте другие поля отчета */}
-//         </div>

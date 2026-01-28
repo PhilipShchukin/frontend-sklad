@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import type { Status } from '@/services/constants';
 import { useDeletePallet, useChangeStatusPallet, useUnpackPallet } from '@/hooks/use-report';
-import { useGetStatusBox } from '@/hooks/use-report'; // пока можем переиспользовать
+import { useGetStatusBox } from '@/hooks/use-report';
 
 export function ActionDropDownPallet({
   palletNumber,
@@ -30,7 +30,6 @@ export function ActionDropDownPallet({
   const { mutate: deletePallet } = useDeletePallet();
   const { mutate: unpackPallet } = useUnpackPallet();
 
-  // пока используем тот же запрос для статусов, если на бэке они общие
   const {
     data: getStatus,
     isLoading: isGetStatusLoading,
@@ -41,18 +40,6 @@ export function ActionDropDownPallet({
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      {/* <DropdownMenuTrigger asChild>
-        <div
-          key={palletNumber}
-          onClick={() => getRefetch()}
-          className="bg-muted relative flex h-14 w-14 cursor-pointer items-center justify-center gap-0.5 rounded-lg border transition hover:bg-neutral-200 sm:h-16 sm:w-16"
-        >
-          <Package className="text-muted-foreground h-7 w-7 opacity-60 sm:h-8 sm:w-8" />
-          <span className="text-foreground inset-0 flex items-center justify-center text-sm font-semibold sm:text-base">
-            {palletNumber}
-          </span>
-        </div>
-      </DropdownMenuTrigger> */}
       <DropdownMenuTrigger asChild>
         <div
           key={palletNumber}

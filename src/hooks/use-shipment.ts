@@ -1,20 +1,24 @@
 import { Api } from '@/services/api-client';
+import type { AgentList, FileItem } from '@/services/shipment.service';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { fetch } from '@tauri-apps/plugin-http';
+import { useCallback, useMemo, useState } from 'react';
 
 export function useGetAgents() {
   const { data, isLoading } = useQuery({
-    queryKey: ['agents'],
-    queryFn: () => Api.shipment.getAgents(),
+    queryKey: ['gtin'],
+    queryFn: () => Api.shipment.getGtins(),
   });
 
   return { data, isLoading };
 }
 
-export function useGetReportsForAgent(agent: string) {
+export function useGetReportsForAgent(gtin: string[]) {
   const { data, isLoading, isSuccess } = useQuery({
-    queryKey: ['agents', agent],
-    queryFn: () => Api.shipment.getReportsForAgent(agent),
-    enabled: !!agent,
+    queryKey: ['agents', gtin],
+    queryFn: () => Api.shipment.getReportsForAgent(gtin),
+    enabled: !!gtin,
   });
 
   return { data, isLoading, isSuccess };
@@ -26,12 +30,10 @@ type CodeRow = {
   palletLabel?: string | null;
 };
 
-import { fetch } from '@tauri-apps/plugin-http';
-
 export const useGetReportCodes = () => {
   return useMutation({
-    mutationFn: async (reportId: string): Promise<CodeRow[]> => {
-      const res = await fetch(`http://localhost:4000/api/shipment/report-codes/${reportId}`);
+    mutationFn: async (gtin: string): Promise<CodeRow[]> => {
+      const res = await fetch(`http://localhost:4000/api/shipment/report-codes/${gtin}`);
       if (!res.ok) {
         const text = await res.text();
         throw new Error(text || 'Ошибка загрузки кодов');
@@ -43,65 +45,96 @@ export const useGetReportCodes = () => {
   });
 };
 
-// export const useShipmentByGtin = () => {
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: (gtin: string) => Api.shipment.getStockByGtin(gtin),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['shipment'] });
-//       toast.success('Коробка без паллеты');
-//     },
-//     onError: (error: Error) => {
-//       toast.error(error.message);
-//     },
-//   });
-// };
+export const useFiles = () => {
+  return useQuery<FileItem[]>({
+    queryKey: ['files'],
+    queryFn: Api.shipment.filesService,
+    enabled: false,
+  });
+};
 
-// export function useGetAgents() {
-//   const { data, isLoading, isSuccess } = useQuery<AgentsResponse>({
-//     queryKey: ['agents'],
-//     queryFn: () => Api.shipment.getAgentsList(),
-//   });
+export const useFinalizeShipmentFile = () => {
+  const qc = useQueryClient();
 
-//   return { data, isLoading, isSuccess };
-// }
+  return useMutation({
+    mutationFn: (fileName: string) => Api.shipment.shipmentsFile(fileName),
 
-// export const useCreateShipmentTask = () => {
-//   return useMutation({
-//     mutationFn: async (data: {
-//       counterparty: string;
-//       date: string;
-//       products: { gtin: string; qty: number }[];
-//     }) => {
-//       const res = await axios.post('/api/shipment-task', data);
-//       return res.data;
-//     },
-//   });
-// };
-// export const useCreateShipmentTask = () => {
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: (payload: AllPalletsForBox) => Api.report.deletePalleteForBox(payload),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['box'] });
-//       toast.success('Задание успешно создано');
-//     },
-//     onError: (error: Error) => {
-//       toast.error(error.message);
-//     },
-//   });
-// };
-// export const useRefreshAgents = () => {
-//   const queryClient = useQueryClient();
+    onSuccess: (data) => {
+      // 1️⃣ Обновляем список файлов
+      qc.invalidateQueries({ queryKey: ['files'] });
 
-//   return useMutation({
-//     mutationFn: () => Api.shipment.getAgentsList(),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ['agents'] });
-//       toast.success('Данные агентов');
-//     },
-//     onError: (error: Error) => {
-//       toast.error(error.message);
-//     },
-//   });
-// };
+      // 2️⃣ Показываем уведомление
+      toast(
+        // title: 'Файл финализирован',
+        `Добавлено ${data.labelsCount} кодов.`,
+      );
+    },
+
+    onError: (err: any) => {
+      toast(
+        // title: 'Ошибка',
+        err?.message || 'Не удалось финализировать файл',
+      );
+    },
+  });
+};
+
+export const useAgentSearchList = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Загружаем всех агентов
+  const {
+    data: agentsList,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ['agents'],
+    queryFn: () => Api.shipment.postAgentsList(),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const agents = agentsList?.agents_list || [];
+
+  const filteredAgents = useMemo(() => {
+    if (!searchTerm.trim()) {
+      return agents;
+    }
+
+    const lowerTerm = searchTerm.toLowerCase();
+    return agents.filter((agent) => {
+      return (
+        agent.name.toLowerCase().includes(lowerTerm) ||
+        agent.unp.toLowerCase().includes(lowerTerm) ||
+        agent.gln.toLowerCase().includes(lowerTerm) ||
+        (agent.address && agent.address.toLowerCase().includes(lowerTerm)) ||
+        (agent.country?.name && agent.country.name.toLowerCase().includes(lowerTerm))
+      );
+    });
+  }, [agents, searchTerm]);
+
+  // Функция для сброса поиска
+  const clearSearch = useCallback(() => {
+    setSearchTerm('');
+  }, []);
+
+  // Функция для поиска агента по ID
+  const getAgentById = useCallback(
+    (id: number): AgentList | undefined => {
+      return agents.find((agent) => agent.id === id);
+    },
+    [agents],
+  );
+
+  return {
+    agents,
+    filteredAgents,
+    searchTerm,
+    setSearchTerm,
+    isLoading,
+    error,
+    refetch,
+    clearSearch,
+    getAgentById,
+  };
+};

@@ -13,7 +13,6 @@ import {
   SelectValue,
   Textarea,
 } from '@/components/ui';
-import { DatePickerField } from '@/components/shared/date-picker-field';
 
 import type { Counterparty } from '../counterparties/counterparties-list';
 
@@ -26,10 +25,7 @@ interface NomenclatureFormProps {
   onCancel: () => void;
 }
 
-// const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
-
-// const API_URL = 'http://localhost:4000/api';
 
 const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -48,9 +44,7 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
     adInfo1: '',
     adInfo2: '',
   });
-  // const { data: nomenclatureItem, isLoading: isLoadingNomenclature } = useNomenclatureItem(
-  //   id || '',
-  // );
+
   const [nomenclatureItem, setNomenclatureItem] = useState<Nomenclature>();
 
   const fetchNomenclatureItem = async () => {
@@ -62,8 +56,6 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
     setNomenclatureItem(data);
   };
   console.log('nomenclatureItem', nomenclatureItem);
-
-  // const { data: counterpartiesData } = useCounterparties();
 
   const [counterparties, setCounterparties] = useState<Counterparty[]>([]);
 
@@ -79,7 +71,6 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
   }, []);
 
   useEffect(() => {
-    // Загружаем контрагентов и номенклатуру
     fetchReports();
 
     if (mode === 'edit' && id) {
@@ -87,7 +78,6 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
     }
   }, [mode, id]);
 
-  // Заполняем форму только после того, как nomenclatureItem загрузился
   useEffect(() => {
     if (mode === 'edit' && nomenclatureItem) {
       setFormData({
@@ -110,8 +100,6 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
       });
     }
   }, [nomenclatureItem, mode]);
-  // const createMutation = useCreateNomenclature();
-  // const updateMutation = useUpdateNomenclature();
 
   useEffect(() => {
     if (mode === 'edit' && nomenclatureItem) {
@@ -145,47 +133,6 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleDateChange = (date: Date | undefined) => {
-    setFormData((prev) => ({
-      ...prev,
-      expirationDate: date ? date.toISOString().split('T')[0] : '',
-    }));
-  };
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   const data = {
-  //     code: formData.code,
-  //     name: formData.name,
-  //     displayName: formData.displayName,
-  //     productBarcode: formData.productBarcode,
-  //     volume: String(formData.volume),
-  //     egaisCode: formData.egaisCode,
-  //     externalCode: formData.externalCode,
-  //     expirationDate: formData.expirationDate ? new Date(formData.expirationDate) : '',
-  //     alcoholPercent: String(formData.alcoholPercent),
-  //     contractorId: formData.contractorId || '',
-  //     labelBox: formData.labelBox || '',
-  //     labelPallet: formData.labelPallet || '',
-  //     adInfo1: formData.adInfo1 || '',
-  //     adInfo2: formData.adInfo2 || '',
-  //   };
-
-  //   try {
-  //     if (mode === 'edit' && id) {
-  //       await updateMutation.mutateAsync({ id, data });
-
-  //     } else {
-  //       await createMutation.mutateAsync(data);
-
-  //     }
-  //      onCancel(); // Возвращаемся к списку после сохранения
-  //   } catch (error) {
-  //     console.error('Error saving nomenclature:', error);
-  //   }
-  // };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -209,7 +156,6 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
     try {
       let res;
 
-      // ✅ РЕЖИМ РЕДАКТИРОВАНИЯ
       if (mode === 'edit' && id) {
         res = await fetch(`${API_URL}/table/nomenkulature-update/${id}`, {
           method: 'PATCH',
@@ -218,10 +164,7 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
           },
           body: JSON.stringify(data),
         });
-      }
-
-      // ✅ РЕЖИМ СОЗДАНИЯ
-      else {
+      } else {
         res = await fetch(`${API_URL}/table/nomenkulature-create`, {
           method: 'POST',
           headers: {
@@ -234,7 +177,7 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
       const result = await res.json();
       console.log('✅ Успешный ответ сервера:', result);
 
-      onCancel(); // ✅ Возврат к списку после сохранения
+      onCancel();
     } catch (error) {
       console.error('❌ Ошибка сохранения номенклатуры:', error);
     }
@@ -316,31 +259,6 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
               </div>
             </div>
 
-            {/* Вторая строка: Название, Название для отображения */}
-            {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="name">Название</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Введите название"
-                  className="text-lg"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="displayName">Название для отображения</Label>
-                <Input
-                  id="displayName"
-                  value={formData.displayName}
-                  onChange={handleChange}
-                  placeholder="Введите название для отображения"
-                />
-              </div>
-            </div> */}
-
-            {/* Третья строка: Штрихкод продукции, Срок годности */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="productBarcode">Штрихкод продукции</Label>
@@ -366,15 +284,9 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
                   placeholder="Введите срок годности"
                   className="font-mono"
                 />
-                {/* <DatePickerField
-                  value={formData.expirationDate ? new Date(formData.expirationDate) : undefined}
-                  onChange={handleDateChange}
-                  label=""
-                /> */}
               </div>
             </div>
 
-            {/* Четвертая строка: Код в ЕГАИС, Внешний код */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="egaisCode">Код в ЕГАИС</Label>
@@ -386,19 +298,8 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
                   className="font-mono"
                 />
               </div>
-
-              {/* <div className="space-y-2">
-                <Label htmlFor="externalCode">Внешний код</Label>
-                <Input
-                  id="externalCode"
-                  value={formData.externalCode}
-                  onChange={handleChange}
-                  placeholder="Введите внешний код"
-                />
-              </div> */}
             </div>
 
-            {/* Пятая строка: Контрагент, Объём тары */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="contractor" className="flex items-center gap-2">
@@ -489,22 +390,12 @@ const NomenclatureForm: React.FC<NomenclatureFormProps> = ({ mode, id, onCancel 
 
             {/* Кнопки */}
             <div className="flex justify-end gap-2 pt-4">
-              <Button
-                variant="outline"
-                onClick={onClear}
-                // disabled={createMutation.isPending || updateMutation.isPending}
-              >
+              <Button variant="outline" onClick={onClear}>
                 <X className="mr-2 h-4 w-4" />
                 Отмена
               </Button>
-              <Button
-                onClick={handleSubmit}
-                // disabled={createMutation.isPending || updateMutation.isPending}
-              >
+              <Button onClick={handleSubmit}>
                 <Save className="mr-2 h-4 w-4" />
-                {/* {createMutation.isPending || updateMutation.isPending
-                  ? 'Сохранение...'
-                  : 'Сохранить'} */}
                 {'Сохранить'}
               </Button>
             </div>

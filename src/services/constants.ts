@@ -1,15 +1,13 @@
 export enum ApiRoutes {
   GET_REPORT = '/packaging',
   CREATE_REPORT = '/packaging/create',
+  PORTAL = '/packaging/portal',
   MOVE_REPORT = '/packaging/move',
   PALLETS_ALL = '/packaging/pallets/available',
   CHANGE_STATUS = '/packaging/change/box-status',
   GET_STATUS = '/packaging/get/box-status',
   DELETE_PALLET_FOR_BOX = '/packaging/delete-pallet-box',
-  // SHIPMENT = 'shipment',
-  // SHIPMENT_STOCK = 'shipment/stock',
-  DATA = '/data/agents',
-  // SHIPMENT_TASK = 'shipment/task',
+  AGENTS_LIST = '/data/agents',
   CHANGE_PALLET_STATUS = '/packaging/pallet/status',
   UNPACK_PALLET = '/packaging/pallet/unpack',
   UNPACK_BOX = '/packaging/box/unpack',
@@ -24,8 +22,11 @@ export enum ApiRoutesTauri {
 }
 
 export enum ApiRoutesShipment {
-  SHIPMENT_AGENT = '/shipment/agents',
+  SHIPMENT_GTINS = '/shipment/gtin',
   SHIPMENT_REPORT = '/shipment/report',
+  FIND_ALL = '/android/find-all',
+  LABUBU = '/android/labubu',
+  SHIPMENT_AGENT_REPORTS = '/shipment/agents-reports',
 }
 
 export enum Status {
@@ -33,4 +34,10 @@ export enum Status {
   DAMAGED = 'DAMAGED',
   RESERVE = 'RESERVE',
   SHIPPED = 'SHIPPED',
+}
+
+export enum Marking {
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
 }

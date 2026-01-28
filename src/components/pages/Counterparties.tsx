@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Building, Plus, X } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import CounterpartiesList from '@/components/shared/table/counterparties/counterparties-list';
 import CounterpartiesForm from '@/components/shared/table/counterparties/counterparties-form';
 
@@ -8,19 +8,16 @@ const Counterparties: React.FC = () => {
   const [mode, setMode] = useState<'list' | 'create' | 'edit'>('list');
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  // Функция для перехода к созданию нового контрагента
   const handleCreate = () => {
     setMode('create');
     setEditingId(null);
   };
 
-  // Функция для перехода к редактированию
   const handleEdit = (id: string) => {
     setMode('edit');
     setEditingId(id);
   };
 
-  // Функция для возврата к списку
   const handleBackToList = () => {
     setMode('list');
     setEditingId(null);
@@ -32,10 +29,6 @@ const Counterparties: React.FC = () => {
         <>
           <div className="mb-6 flex items-center justify-between">
             <div>
-              {/* <h1 className="flex items-center gap-3 text-3xl font-bold">
-                <Building className="h-8 w-8" />
-                Контрагенты
-              </h1> */}
               <p className="mt-2 text-xl font-semibold">Управление справочником контрагентов</p>
             </div>
             <Button onClick={handleCreate}>
@@ -49,10 +42,6 @@ const Counterparties: React.FC = () => {
         <>
           <div className="mb-6 flex items-center justify-between">
             <div>
-              {/* <h1 className="flex items-center gap-3 text-3xl font-bold">
-                <Building className="h-8 w-8" />
-                {mode === 'create' ? 'Создание контрагента' : 'Редактирование контрагента'}
-              </h1> */}
               <p className="mt-2 text-xl font-semibold">
                 {mode === 'create'
                   ? 'Заполните информацию о новом контрагенте'

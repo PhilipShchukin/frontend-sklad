@@ -47,7 +47,6 @@ export default function ReceivingReports() {
   const fetchReportDetails = async (filename: string) => {
     const res = await fetch(`${API_URL + '/data/report-nest-one'}/${filename}`);
     const data: Report = await res.json();
-    console.log('data', data);
     setSelected(data);
   };
 
@@ -135,18 +134,14 @@ export default function ReceivingReports() {
               <p>
                 <b>Срок годности:</b> {selected.BBD}
               </p>
-              {/* <p>
-                <b>GTIN:</b> {selected.gtin}
-              </p> */}
+
               <p>
                 <b>Партия:</b> {selected.Batch}
               </p>
               <p>
                 <b>Название:</b> {selected.Name}
               </p>
-              {/* <p>
-                <b>Описание:</b> {selected.description.toLowerCase()}
-              </p> */}
+
               <p>
                 <b>Количество коробок:</b> {selected.units.boxes.length}
               </p>

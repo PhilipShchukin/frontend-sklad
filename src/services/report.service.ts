@@ -9,7 +9,6 @@ import type {
   MoveBoxPayload,
   ReportGet,
 } from '@/types/pages-types/report-types';
-// import type { Report as MyReport } from '@/types/pages-types/report-types';
 export type PalletsResponse = {
   palletNumber: number[];
 };
@@ -22,11 +21,14 @@ export const getAllReport = async (): Promise<ReportGet[]> => {
   return (await axiosClassic.get(ApiRoutes.GET_REPORT)).data;
 };
 
+export const pushPortal = async (data: any): Promise<any> => {
+  const push = await axiosClassic.post(ApiRoutes.PORTAL, data);
+  return push;
+};
+
 export const pushReportDB = async (data: any): Promise<any> => {
-  const a = await axiosClassic.post(ApiRoutes.CREATE_REPORT, data);
-  console.log('a444444444444444444', a);
-  // return await axiosClassic.post(ApiRoutes.CREATE_REPORT, data);
-  return a;
+  const response = await axiosClassic.post(ApiRoutes.CREATE_REPORT, data);
+  return response.data;
 };
 
 export const moveCode = async (data: MoveBoxPayload): Promise<boolean> => {

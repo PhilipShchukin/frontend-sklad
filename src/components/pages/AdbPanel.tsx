@@ -19,8 +19,6 @@ export function AdbPanel() {
     fetchReports();
   }, []);
 
-  console.log('ping', ping);
-  console.log('error', error);
   return (
     <div style={{ padding: '1rem' }}>
       <h2>Ping ADB → Nest:</h2>
